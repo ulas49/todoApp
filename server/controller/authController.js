@@ -81,8 +81,22 @@ const loginUser = async (req,res,next)=>{
     }
 }
 
+const getUser = async (req,res,next)=>{
+    const {user} = req.user
+    const userInfo = user.user
+
+    const isUser = await User.findOne({_id:userInfo._id})
+  
+    if(!isUser){
+        return next(createError(401,"Unauthorized"))
+    }
+
+    return res.json({user:isUser})
+}
+
 
 module.exports = {
     registerUser,
-    loginUser
+    loginUser,
+    getUser
 }

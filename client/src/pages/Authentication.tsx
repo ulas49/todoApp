@@ -23,6 +23,7 @@ import {
       initialValues: {
         email: '',
         name: '',
+        surname:'',
         password: '',
         terms: true,
       },
@@ -58,6 +59,16 @@ import {
                 radius="md"
               />
             )}
+
+            {type === 'register' && (
+              <TextInput
+                label="Surname"
+                placeholder="Your surname"
+                value={form.values.surname}
+                onChange={(event) => form.setFieldValue('surname', event.currentTarget.value)}
+                radius="md"
+              />
+            )}
   
             <TextInput
               required
@@ -79,13 +90,7 @@ import {
               radius="md"
             />
   
-            {type === 'register' && (
-              <Checkbox
-                label="I accept terms and conditions"
-                checked={form.values.terms}
-                onChange={(event) => form.setFieldValue('terms', event.currentTarget.checked)}
-              />
-            )}
+
           </Stack>
   
           <Group justify="space-between" mt="xl">

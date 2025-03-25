@@ -2,6 +2,7 @@ const express = require('express')
 require('./db/dbConnection')
 const cors = require('cors')
 const authRouter = require('./routes/authRouter')
+const todoRouter = require('./routes/todoRouter')
 
 
 const app = express()
@@ -14,6 +15,7 @@ app.use(express.urlencoded({extended:true}))
 
 
 app.use('/api/auth',authRouter)
+app.use('/api/todo',todoRouter)
 
 
 app.use((err,req,res,next)=>{

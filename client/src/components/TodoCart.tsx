@@ -1,7 +1,7 @@
 import { IconHeart } from '@tabler/icons-react';
 import { ActionIcon, Badge, Button, Card, Group, Image, Text } from '@mantine/core';
 import classes from './BadgeCard.module.css';
-
+import { Todo } from '../pages/Todos';
 const mockdata = {
   image:
     'https://images.unsplash.com/photo-1437719417032-8595fd9e9dc6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&q=80',
@@ -18,11 +18,11 @@ const mockdata = {
   ],
 };
 
-export function TodoCart() {
-  const { image, title, description, badges } = mockdata;
-  const features = badges.map((badge) => (
-    <Badge variant="light" key={badge.label} leftSection={badge.emoji}>
-      {badge.label}
+export function TodoCart({title,content,tags}:Todo) {
+  const { image } = mockdata;
+  const features = tags && tags.map((tag,idx) => (
+    <Badge variant="light" key={idx} >
+      {tag}
     </Badge>
   ));
 
@@ -39,7 +39,7 @@ export function TodoCart() {
           </Text>
         </Group>
         <Text fz="sm" mt="xs">
-          {description}
+          {content}
         </Text>
       </Card.Section>
 

@@ -82,7 +82,8 @@ const loginUser = async (req,res,next)=>{
 
 const getUser = async (req,res,next)=>{
     const {user} = req.user
-    const userInfo = user
+    const userInfo = user.user
+    console.log("userInfo",userInfo);
     
 
     const isUser = await User.findOne({_id:userInfo._id})

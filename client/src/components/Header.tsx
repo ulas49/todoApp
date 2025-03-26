@@ -42,7 +42,7 @@ const onLogout = ()=>{
 }
 
   return (
-    <Box pb={120}>
+    <Box pb={60}>
       <header className={classes.header}>
         <Group justify="space-around"  h="100%">
             <img src="" alt="LOGO" />

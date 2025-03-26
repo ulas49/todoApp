@@ -6,6 +6,7 @@ const createError = require('../utils/createError')
 const addTodo = async (req,res,next)=>{
  const {title,content,tags} = req.body
  const {user} = req.user
+ const userInfo=user.user
 
 
  if(!title){
@@ -22,7 +23,7 @@ const addTodo = async (req,res,next)=>{
         title,
         content,
         tags:tags || [],
-        userId:user._id 
+        userId:userInfo._id 
     })
 
     await todo.save()
@@ -42,6 +43,7 @@ const editTodo = async (req,res,next)=>{
     const todoId = req.params.todoId
     const {title,content,tags} = req.body
     const {user}=req.user
+    const userInfo=user.user
 
 
     if(!title && !content && !tags){
@@ -49,7 +51,7 @@ const editTodo = async (req,res,next)=>{
     }
 
     try {
-        const todo = await Todo.findOne({_id:todoId,userId:user._id})
+        const todo = await Todo.findOne({_id:todoId,userId:userInfo._id})
 
         if(!todo){
             return next(createError(404,"Todo not found"))
@@ -74,11 +76,12 @@ const editTodo = async (req,res,next)=>{
 
 const getAllTodos = async (req,res,next)=>{
     const {user} = req.user
-
+    const userInfo=user.user
+    
     
 
     try {
-        const todos = await Todo.find({userId:user._id})
+        const todos = await Todo.find({userId:userInfo._id})
         return res.json({
             todos
         })
@@ -91,14 +94,16 @@ const getAllTodos = async (req,res,next)=>{
 const deleteTodo = async (req,res,next)=>{
     const todoId = req.params.todoId
     const {user} = req.user
+    const userInfo=user.user
+
 
     try {
-        const todo = await Todo.findOne({_id:todoId,userId:user._id})
+        const todo = await Todo.findOne({_id:todoId,userId:userInfo._id})
         if(!todo) {
             return next(createError(404,"Todo  not found"))
         }
         
-        await Todo.deleteOne({_id:todoId,userId:user._id})
+        await Todo.deleteOne({_id:todoId,userId:userInfo._id})
 
         return res.json({
             message:"Todo deleted"

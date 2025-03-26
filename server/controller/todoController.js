@@ -5,8 +5,11 @@ const createError = require('../utils/createError')
 
 const addTodo = async (req,res,next)=>{
  const {title,content,tags} = req.body
+//  const { image} = req
  const {user} = req.user
  const userInfo=user.user
+
+// console.log("image",image);
 
 
  if(!title){
@@ -23,7 +26,8 @@ const addTodo = async (req,res,next)=>{
         title,
         content,
         tags:tags || [],
-        userId:userInfo._id 
+        userId:userInfo._id,
+        imageUrl: req.file && req.file.location
     })
 
     await todo.save()
@@ -42,6 +46,7 @@ const addTodo = async (req,res,next)=>{
 const editTodo = async (req,res,next)=>{
     const todoId = req.params.todoId
     const {title,content,tags} = req.body
+    // const { image, file } = req
     const {user}=req.user
     const userInfo=user.user
 
@@ -61,6 +66,8 @@ const editTodo = async (req,res,next)=>{
         if(title) todo.title = title
         if(content) todo.content = content
         if(tags) todo.tags=tags
+        // if(file) todo.fileUrl=file.location
+        if(req.file) todo.imageUrl=req.file && req.file.location
 
         await todo.save()
 
@@ -106,7 +113,8 @@ const deleteTodo = async (req,res,next)=>{
         await Todo.deleteOne({_id:todoId,userId:userInfo._id})
 
         return res.json({
-            message:"Todo deleted"
+            message:"Todo deleted",
+            success:true
         })
     } catch (error) {
          next(createError(500,"Internal Server Error"))

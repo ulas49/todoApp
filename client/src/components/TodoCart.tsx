@@ -23,7 +23,7 @@ interface TodoCartProps extends Todo {
   editTodo: (todo: Todo) => void;
   deleteTodo: (id: string) => void;
 }
-export function TodoCart({title,content,tags,_id,editTodo,deleteTodo}:TodoCartProps) {
+export function TodoCart({title,content,tags,_id,imageUrl,editTodo,deleteTodo}:TodoCartProps) {
   const { image } = mockdata;
   const features = tags && tags.map((tag,idx) => (
     <Badge variant="light" key={idx} >
@@ -34,7 +34,7 @@ export function TodoCart({title,content,tags,_id,editTodo,deleteTodo}:TodoCartPr
   return (
     <Card withBorder radius="md" p="md" className='w-[300px]    max-h-[500px]   '>
       <Card.Section>
-        <Image src={image} alt={title} className='h-[200px]' />
+        <Image src={imageUrl || ""} alt="thumbnails " className='h-[200px]' />
       </Card.Section>
 
       <Card.Section className={classes.section} mt="md">
@@ -55,7 +55,7 @@ export function TodoCart({title,content,tags,_id,editTodo,deleteTodo}:TodoCartPr
       </Card.Section>
 
       <Group mt="xs">
-      <Button radius="md" style={{ flex: 1 }} onClick={() => editTodo({ _id, title, content, tags })}>
+      <Button radius="md" style={{ flex: 1 }} onClick={() => editTodo({ _id, title, content, tags,imageUrl})}>
           Düzenle
         </Button>
         <ActionIcon variant="default" radius="md" size={36} onClick={() => deleteTodo(_id)}>

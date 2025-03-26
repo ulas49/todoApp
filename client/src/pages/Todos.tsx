@@ -19,6 +19,7 @@ import { IconPlus, IconX } from "@tabler/icons-react";
 
 
 export interface Todo {
+  _id:string,
   title: string;
   content: string;
   tags?: string[];
@@ -31,12 +32,13 @@ const Todos: React.FC = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
-
+  const [editingTodo, setEditingTodo] = useState<Todo | null>(null);
   const form = useForm({
     initialValues: {
       title: "",
       description: "",
       tags: [] as string[],
+      _id:""
     },
     validate: {
       title: (value) => (value.length < 3 ? "Başlık en az 3 karakter olmalı" : null),
@@ -73,6 +75,17 @@ const Todos: React.FC = () => {
     }
   }
 
+   const editTodo = (todo: Todo) => {
+    form.setValues({
+      title: todo.title,
+      description: todo.content,
+      tags: todo.tags || [],
+      _id:todo._id,
+    });
+    setEditingTodo(todo);
+    open(); 
+  };
+
 
   const handleAddTodo = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -94,12 +107,52 @@ const Todos: React.FC = () => {
     }
   };
 
+
+  const handleEditTodo = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  
+    try {
+      if (!editingTodo) return;
+  
+      const response = await axiosInstance.put(`/api/todo/editTodo/${editingTodo._id}`, {
+        title: form.values.title,
+        content: form.values.description,
+        tags: form.values.tags,
+      });
+  
+      if (response.data && response.data.todo) {
+        getAllTodos();
+        form.reset();
+        close();
+      }
+    } catch (error) {
+      console.log("Todo güncellenirken hata oluştu.", error);
+    }
+  };
+
+
+  const deleteTodo = async (id: string) => {
+    try {
+      const response = await axiosInstance.delete(`/api/todo/deleteTodo/${id}`);
+      if (response.data && response.data.success) {
+        setAllTodos(allTodos.filter((todo) => todo._id !== id)); 
+      }
+    } catch (error) {
+      console.log("Todo silinirken hata oluştu.", error);
+    }
+  };
+
+  const closeModal = () => {
+    form.reset();  
+    setEditingTodo(null);  
+    close();  
+  };
+
   useEffect(() => {
     getUser()
     getAllTodos()
   }, [])
 
-  console.log("tags", form.values.tags);
 
 
   const addTag = () => {
@@ -126,7 +179,7 @@ const Todos: React.FC = () => {
         </Button>
         <div className=' grid grid-cols-4 gap-16   card-mb '> {
           allTodos.map((todo)=>(
-            <TodoCart title={todo.title} content={todo.content} tags={todo.tags}/>
+            <TodoCart title={todo.title} content={todo.content} tags={todo.tags} _id={todo._id} editTodo={editTodo} deleteTodo={deleteTodo}/>
           
           )
           )
@@ -134,8 +187,8 @@ const Todos: React.FC = () => {
 
       </div>
 
-      <Modal opened={opened} onClose={close} title="Yeni Todo Ekle" centered>
-        <form onSubmit={handleAddTodo}>
+      <Modal opened={opened} onClose={closeModal}  title={editingTodo ? "Todo Düzenle" : "Yeni Todo Ekle"} centered>
+        <form onSubmit={editingTodo ? handleEditTodo : handleAddTodo}>
           <TextInput
             label="Başlık"
             placeholder="Todo başlığını girin"
@@ -188,8 +241,9 @@ const Todos: React.FC = () => {
           </Group>
 
 
-          <Button type="submit" fullWidth mt="md" color="green">
-            Kaydet
+          <Button type="submit" fullWidth mt="md" color="blue">
+          {editingTodo ? "Güncelle" : "Kaydet"}
+
           </Button>
         </form>
       </Modal>

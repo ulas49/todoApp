@@ -14,6 +14,7 @@ import { useDisclosure } from '@mantine/hooks';
 import classes from './HeaderMegaMenu.module.css';
 import { useNavigate } from 'react-router-dom';
 import SearchBar from './SearchBar';
+import gif from '../assets/1.gif'
 
  export interface UserInfo {
   name:string,
@@ -45,7 +46,8 @@ const onLogout = ()=>{
     <Box pb={60}>
       <header className={classes.header}>
         <Group justify="space-around"  h="100%">
-            <img src="" alt="LOGO" />
+      
+            <img src={gif} alt="LOGO"  className='w-22 sm:w-28 md:w-36 lg:w-42 h-auto'/>
            <SearchBar value={searchQuery} onChange={({target})=>{
             setSearchQuery(target.value)
            }}

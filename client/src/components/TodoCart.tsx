@@ -1,4 +1,4 @@
-import { IconHeart } from '@tabler/icons-react';
+import { IconTrash  } from '@tabler/icons-react';
 import { ActionIcon, Badge, Button, Card, Group, Image, Text } from '@mantine/core';
 import classes from './BadgeCard.module.css';
 import { Todo } from '../pages/Todos';
@@ -18,7 +18,12 @@ const mockdata = {
   ],
 };
 
-export function TodoCart({title,content,tags}:Todo) {
+
+interface TodoCartProps extends Todo {
+  editTodo: (todo: Todo) => void;
+  deleteTodo: (id: string) => void;
+}
+export function TodoCart({title,content,tags,_id,editTodo,deleteTodo}:TodoCartProps) {
   const { image } = mockdata;
   const features = tags && tags.map((tag,idx) => (
     <Badge variant="light" key={idx} >
@@ -50,11 +55,11 @@ export function TodoCart({title,content,tags}:Todo) {
       </Card.Section>
 
       <Group mt="xs">
-        <Button radius="md" style={{ flex: 1 }}>
-          Show details
+      <Button radius="md" style={{ flex: 1 }} onClick={() => editTodo({ _id, title, content, tags })}>
+          Düzenle
         </Button>
-        <ActionIcon variant="default" radius="md" size={36}>
-          <IconHeart className={classes.like} stroke={1.5} />
+        <ActionIcon variant="default" radius="md" size={36} onClick={() => deleteTodo(_id)}>
+          <IconTrash stroke={1.5} />
         </ActionIcon>
       </Group>
     </Card>

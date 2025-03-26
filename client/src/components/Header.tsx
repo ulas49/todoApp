@@ -15,9 +15,18 @@ import classes from './HeaderMegaMenu.module.css';
 import { useNavigate } from 'react-router-dom';
 import SearchBar from './SearchBar';
 
+ export interface UserInfo {
+  name:string,
+  surname:string,
+  email:string,
+  _id:string
+}
 
+interface UserProps {
+  userInfo:UserInfo | null
+}
 
-export function HeaderMegaMenu() {
+export function HeaderMegaMenu({userInfo}:UserProps) {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
   const [searchQuery,setSearchQuery]=useState<string>('')
   const history = useNavigate()
@@ -27,6 +36,10 @@ const handleSearch = ()=>{
 
 }
 
+const onLogout = ()=>{
+  localStorage.clear()
+  history('/login')
+}
 
   return (
     <Box pb={120}>
@@ -38,7 +51,8 @@ const handleSearch = ()=>{
            }}
            handleSearch={handleSearch}/>
           <Group visibleFrom="sm">
-            <Button variant="default" onClick={()=>history('/login')}>Log out</Button>
+            <p className='text-sm font-medium'>{userInfo && userInfo.name} {userInfo && userInfo.surname} </p>
+            <Button variant="default" onClick={onLogout}>Log out</Button>
           </Group>
 
           <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="sm" />
@@ -61,8 +75,10 @@ const handleSearch = ()=>{
           <Divider my="sm" />
 
           <Group justify="center" grow pb="xl" px="md">
-          <Button variant="default" onClick={()=>history('/login')}>Log out</Button>
+          <Button variant="default" onClick={onLogout}>Log out</Button>
           </Group>
+
+
         </ScrollArea>
       </Drawer>
     </Box>

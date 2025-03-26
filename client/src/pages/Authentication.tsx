@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
     Anchor,
     Button,
@@ -16,16 +17,18 @@ import {
   import { GoogleButton } from '../components/GoogleButton';
   import { TwitterButton } from '../components/TwitterButton';
   import todoIllustraton  from '../assets/todoIllustration.jpg';
+  import axiosInstance from '../utils/axiosInstance'
+  import { useNavigate } from 'react-router-dom';
 
   export function AuthenticationForm(props: PaperProps) {
     const [type, toggle] = useToggle(['login', 'register']);
+    const history = useNavigate()
     const form = useForm({
       initialValues: {
         email: '',
         name: '',
         surname:'',
         password: '',
-        terms: true,
       },
   
       validate: {
@@ -34,11 +37,57 @@ import {
       },
     });
   
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>)=>{
+      e.preventDefault()
+
+      if(type==="login"){
+
+        try {
+          const response = await axiosInstance.post('/api/auth/login',{
+            email:form.values.email,
+            password:form.values.password
+          })
+          if(response.data && response.data.accessToken){
+            localStorage.setItem("token",response.data.accessToken)
+            history("/")
+
+          }
+        } catch (error) {
+         console.log(error);
+         
+        }
+      }
+
+      if(type==="register"){
+
+        try {
+          const response = await axiosInstance.post('/api/auth/register',{
+            email:form.values.email,
+            password:form.values.password,
+            name:form.values.name,
+            surname:form.values.surname
+          })
+ 
+          if(response.data && response.data.accessToken){
+            localStorage.setItem("token",response.data.accessToken)
+            history("/")
+
+          }
+        } catch (error) {
+         console.log(error);
+         
+        }
+      }
+
+
+
+    }
+   
     return (
      <div className='flex items-center justify-evenly h-[900px] md:flex-row flex-col  '>
         <div className='w-[500px] md:w-[600px]'>  <Paper radius="md" p="xl" withBorder {...props}>
         <Text size="lg" fw={500}>
-          Welcome to Mantine, {type} with
+          Welcome to To-Do App, {type} with
         </Text>
   
         <Group grow mb="md" mt="md">
@@ -48,7 +97,7 @@ import {
   
         <Divider label="Or continue with email" labelPosition="center" my="lg" />
   
-        <form onSubmit={form.onSubmit(() => {})}>
+        <form onSubmit={handleSubmit}>
           <Stack>
             {type === 'register' && (
               <TextInput

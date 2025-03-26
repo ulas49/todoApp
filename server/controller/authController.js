@@ -23,7 +23,6 @@ const registerUser = async (req,res,next)=>{
             email,
             password
         })
-        console.log("user",user);
         
         await user.save()
 
@@ -83,7 +82,8 @@ const loginUser = async (req,res,next)=>{
 
 const getUser = async (req,res,next)=>{
     const {user} = req.user
-    const userInfo = user.user
+    const userInfo = user
+    
 
     const isUser = await User.findOne({_id:userInfo._id})
   
@@ -91,7 +91,7 @@ const getUser = async (req,res,next)=>{
         return next(createError(401,"Unauthorized"))
     }
 
-    return res.json({user:isUser})
+    return res.json({user:{name:isUser.name,surname:isUser.surname,email:isUser.email,_id:isUser._id}})
 }
 
 

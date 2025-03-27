@@ -73,9 +73,12 @@ import {
             history("/")
 
           }
-        } catch (error) {
-         console.log(error);
-         
+        } catch (error:any) {
+          const backendErrors: Record<string, string> = {};
+          error.response.data.errors.forEach((err: { field: string; message: string }) => {
+            backendErrors[err.field] = err.message;
+          });
+          form.setErrors(backendErrors);
         }
       }
 
@@ -106,6 +109,7 @@ import {
                 value={form.values.name}
                 onChange={(event) => form.setFieldValue('name', event.currentTarget.value)}
                 radius="md"
+                error={form.errors.name}
               />
             )}
 
@@ -116,6 +120,7 @@ import {
                 value={form.values.surname}
                 onChange={(event) => form.setFieldValue('surname', event.currentTarget.value)}
                 radius="md"
+                error={form.errors.surname}
               />
             )}
   

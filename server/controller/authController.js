@@ -1,10 +1,23 @@
 const User = require('../models/userModel')
 const jwt = require('jsonwebtoken')
 const createError = require('../utils/createError')
+const { loginSchema, registerSchema } = require('../utils/validationSchema')
+
 
 const registerUser = async (req,res,next)=>{
     try {
         const {name,surname,email,password} = req.body;
+        const { error } = registerSchema.validate(req.body, { abortEarly: false });
+
+        if (error) {
+            return res.status(400).json({
+              success: false,
+              errors: error.details.map((err) => ({
+                field: err.context.key,
+                message: err.message
+              }))
+            });
+          }
 
         if(!name) return  next(createError(400,"name is required")) 
         if(!surname) return  next(createError(400,"surname is required"))  
@@ -47,6 +60,17 @@ const loginUser = async (req,res,next)=>{
     try {
         const {email,password} = req.body;
 
+        const { error } = loginSchema.validate(req.body, { abortEarly: false });
+
+        if (error) {
+            return res.status(400).json({
+              success: false,
+              errors: error.details.map((err) => ({
+                field: err.context.key,
+                message: err.message
+              }))
+            });
+          }
 
         if(!email) return next(createError(400,"email is required"))  
         if(!password) return next(createError(400,"password is required"))  

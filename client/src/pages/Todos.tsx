@@ -18,6 +18,7 @@ import { useForm } from "@mantine/form";
 import { IconPlus, IconX } from "@tabler/icons-react";
 import { ToastContainer, toast } from 'react-toastify';
 import axiosInstanceFD from '../utils/axiosInstanceFD'
+import axios from 'axios'
 
 
 export interface Todo {
@@ -26,6 +27,7 @@ export interface Todo {
   content: string;
   tags?: string[];
   imageUrl:string;
+  recommendation:string;
 }
 
 const Todos: React.FC = () => {
@@ -109,7 +111,10 @@ const Todos: React.FC = () => {
    
     if (image) formData.append("image", image);
 
-
+    const recommendation = await fetchRecommendation(form.values.description);
+    console.log("RECOM",recommendation);
+    
+    formData.append("recommendation", recommendation);
  
  
     try {
@@ -139,11 +144,13 @@ const Todos: React.FC = () => {
    
 
     if (image) formData.append("image", image);
-    if (file) formData.append("file", file);
 
-    for (let pair of formData.entries()) {
-      console.log(pair[0] + ": " + pair[1]);
-    }
+
+    const recommendation = await fetchRecommendation(form.values.description);
+    formData.append("recommendation", recommendation);
+
+
+
     try {
       if (!editingTodo) return;
 
@@ -171,6 +178,30 @@ const Todos: React.FC = () => {
 
     } catch (error) {
       console.log("Todo silinirken hata oluştu.", error);
+    }
+  };
+
+
+
+  const fetchRecommendation = async (todoContent: string) => {
+    const apiUrl = import.meta.env.VITE_APP_OPEN_API_KEY
+    
+    try {
+      const response = await axios.post("https://api.openai.com/v1/chat/completions", {
+        model: "gpt-3.5-turbo-0125",
+        messages: [{ role: "system", content: "You are a task assistant. Make a good suggestion without further ado, no questions and 15 words maximum." }, { role: "user", content: todoContent }],
+      max_tokens: 200,
+      }, {
+        headers: {
+          Authorization: `Bearer ${apiUrl}`,
+          "Content-Type": "application/json",
+
+        },
+      });
+  
+      return response.data.choices[0].message.content;
+    } catch (error) {
+      console.error("ChatGPT öneri isteği başarısız oldu", error);
     }
   };
 
@@ -213,7 +244,7 @@ const Todos: React.FC = () => {
         </Button>
         <div className=' grid grid-cols-4 gap-16   card-mb '> {
           allTodos.map((todo) => (
-            <TodoCart title={todo.title} content={todo.content} tags={todo.tags} _id={todo._id} imageUrl={todo.imageUrl} editTodo={editTodo} deleteTodo={deleteTodo} />
+            <TodoCart title={todo.title} content={todo.content} tags={todo.tags} _id={todo._id} imageUrl={todo.imageUrl} recommendation={todo.recommendation} editTodo={editTodo} deleteTodo={deleteTodo} />
 
           )
           )

@@ -25,6 +25,8 @@ const todoSchema = new Schema({
     imageUrl:{
         type:String,
     },
+    recommendation: { type: String, required: false },
+
 },{timestamps:true})
 
 

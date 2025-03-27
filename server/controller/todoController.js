@@ -4,7 +4,7 @@ const createError = require('../utils/createError')
 
 
 const addTodo = async (req,res,next)=>{
- const {title,content,tags} = req.body
+ const {title,content,tags,recommendation } = req.body
 //  const { image} = req
  const {user} = req.user
  const userInfo=user.user
@@ -27,7 +27,8 @@ const addTodo = async (req,res,next)=>{
         content,
         tags:tags || [],
         userId:userInfo._id,
-        imageUrl: req.file && req.file.location
+        imageUrl: req.file && req.file.location,
+        recommendation
     })
 
     await todo.save()
@@ -45,7 +46,7 @@ const addTodo = async (req,res,next)=>{
 
 const editTodo = async (req,res,next)=>{
     const todoId = req.params.todoId
-    const {title,content,tags} = req.body
+    const {title,content,tags,recommendation} = req.body
     // const { image, file } = req
     const {user}=req.user
     const userInfo=user.user
@@ -66,6 +67,7 @@ const editTodo = async (req,res,next)=>{
         if(title) todo.title = title
         if(content) todo.content = content
         if(tags) todo.tags=tags
+        if(recommendation) todo.recommendation=recommendation
         // if(file) todo.fileUrl=file.location
         if(req.file) todo.imageUrl=req.file && req.file.location
 

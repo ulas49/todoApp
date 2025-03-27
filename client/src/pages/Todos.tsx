@@ -226,6 +226,7 @@ const Todos: React.FC = () => {
     }
   }
 
+
   const closeModal = () => {
     form.reset();
     setEditingTodo(null);
@@ -258,9 +259,9 @@ const Todos: React.FC = () => {
     <div>
       <ToastContainer  autoClose={2000}/>
 
-      <HeaderMegaMenu userInfo={userInfo}  onSearchTodo={onSearchTodo}/>
+      <HeaderMegaMenu userInfo={userInfo}  onSearchTodo={onSearchTodo} />
       <div className='  w-full flex flex-col items-center p-4 '>
-        <Button onClick={open} color="blue" size="md" mb="lg">
+        <Button onClick={open} color="blue" size="md" mb="xl">
           + Yeni Todo Ekle
         </Button>
         <div className=' grid grid-cols-4 gap-16   card-mb '> {
@@ -326,8 +327,12 @@ const Todos: React.FC = () => {
             ))}
           </Group>
 
-          <input type="file"   onChange={(e) => setImage(e.target.files && e.target.files[0])} />
-          <input type="file" onChange={(e) => setFile( e.target.files && e.target.files[0])} />
+            
+             <input type="file"   onChange={(e) => setImage(e.target.files && e.target.files[0])}   className='file:border-2 file:border-blue-500 file:bg-blue-100 file:text-blue-500 file:px-4 file:py-2 file:rounded-md file:cursor-pointer hover:file:bg-blue-200 transition duration-300 ease-in-out '/>
+
+         
+          <br />  <br />
+          <input type="file" onChange={(e) => setFile( e.target.files && e.target.files[0])} className='file:border-2 file:border-green-500 file:bg-green-100 file:text-green-500 file:px-4 file:py-2 file:rounded-md file:cursor-pointer hover:file:bg-blue-200 transition duration-300 ease-in-out ' />
           <Button type="submit" fullWidth mt="md" color="blue">
             {editingTodo ? "Güncelle" : "Kaydet"}
 

@@ -41,6 +41,7 @@ const handleSearch = ()=>{
   }
 }
 
+
 const onLogout = ()=>{
   localStorage.clear()
   history('/login')
@@ -48,7 +49,7 @@ const onLogout = ()=>{
 
 
   return (
-    <Box pb={60}>
+    <Box pb={30}>
       <header className={classes.header}>
         <Group justify="space-around"  h="100%">
       
@@ -56,7 +57,8 @@ const onLogout = ()=>{
            <SearchBar value={searchQuery} onChange={({target})=>{
             setSearchQuery(target.value)
            }}
-           handleSearch={handleSearch}/>
+           handleSearch={handleSearch}
+          />
           <Group visibleFrom="sm">
             <p className='text-sm font-medium'>{userInfo && userInfo.name} {userInfo && userInfo.surname} </p>
             <Button variant="default" onClick={onLogout}>Log out</Button>

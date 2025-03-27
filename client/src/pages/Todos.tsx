@@ -328,11 +328,9 @@ const Todos: React.FC = () => {
           </Group>
 
             
-             <input type="file"   onChange={(e) => setImage(e.target.files && e.target.files[0])}   className='file:border-2 file:border-blue-500 file:bg-blue-100 file:text-blue-500 file:px-4 file:py-2 file:rounded-md file:cursor-pointer hover:file:bg-blue-200 transition duration-300 ease-in-out '/>
-
-         
-          <br />  <br />
-          <input type="file" onChange={(e) => setFile( e.target.files && e.target.files[0])} className='file:border-2 file:border-green-500 file:bg-green-100 file:text-green-500 file:px-4 file:py-2 file:rounded-md file:cursor-pointer hover:file:bg-blue-200 transition duration-300 ease-in-out ' />
+             <input type="file"   onChange={(e) => setImage(e.target.files && e.target.files[0])}   className='file:border-2 file:border-blue-500 file:bg-blue-100 file:text-blue-500 file:px-4 file:py-2 file:rounded-md file:cursor-pointer hover:file:bg-blue-200 transition duration-300 ease-in-out '/>    
+            
+          {/* <input type="file" onChange={(e) => setFile( e.target.files && e.target.files[0])} className='file:border-2 file:border-green-500 file:bg-green-100 file:text-green-500 file:px-4 file:py-2 file:rounded-md file:cursor-pointer hover:file:bg-blue-200 transition duration-300 ease-in-out ' /> */}
           <Button type="submit" fullWidth mt="md" color="blue">
             {editingTodo ? "Güncelle" : "Kaydet"}
 

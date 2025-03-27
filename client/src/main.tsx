@@ -9,7 +9,6 @@ import { Notifications } from '@mantine/notifications';
 
 createRoot(document.getElementById('root')!).render(
   <MantineProvider>
-
     <App />
   </MantineProvider>
 

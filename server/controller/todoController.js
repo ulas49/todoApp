@@ -124,9 +124,41 @@ const deleteTodo = async (req,res,next)=>{
 }
 
 
+
+const searchTodo = async (req,res,next)=>{
+    const {user} = req.user
+    const {query} = req.query
+    const userInfo=user.user
+    
+
+    if(!query){
+        return res.status(400).json({error:true,message:"Search query is required"})
+    }
+    try {
+        const matchedTodos = await Todo.find({
+            userId:userInfo._id,
+            $or:[
+                {title:{$regex:new RegExp(query,"i")}},
+                {content:{$regex:new RegExp(query,"i")}}
+            ]
+        }) 
+         
+        return res.json({
+            error:false,
+            todos:matchedTodos,
+            message:"Todos matching"
+        })
+      
+    } catch (error) {
+         next(createError(500,"Internal Server Error"))
+    }
+}
+
+
 module.exports = {
     addTodo,
     editTodo,
     getAllTodos,
-    deleteTodo
+    deleteTodo,
+    searchTodo
 }

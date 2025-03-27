@@ -7,29 +7,17 @@ import Todos from './pages/Todos'
 import './App.css'
 
 
-
 const App: React.FC = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-
   return (
     <Router>
       <Routes>
-        {/* <PublicRoute
-          restricted={true}
-          isAuthenticated={isAuthenticated}
-          element={<AuthenticationForm/>}
-          path="/login"
-        /> */}
-        
-        {/* <PrivateRoute
-          isAuthenticated={isAuthenticated}
-          element={<TodoPage />}
-          path="/todos"
-        /> */}
-        
-        <Route path="/" element={<Todos/>} />
-        <Route path="/login" element={<AuthenticationForm/>} />
+        {/* Giriş yapılmamışsa /login sayfasına yönlendir */}
+        <Route path="/" element={<PrivateRoute />}>
+          <Route index element={<Todos />} />
+        </Route>
 
+        {/* Giriş ve kayıt sayfası */}
+        <Route path="/login" element={<AuthenticationForm />} />
       </Routes>
     </Router>
   );

@@ -25,22 +25,27 @@ import gif from '../assets/1.gif'
 
 interface UserProps {
   userInfo:UserInfo | null
+  onSearchTodo:(query:string)=>void
 }
 
-export function HeaderMegaMenu({userInfo}:UserProps) {
+export function HeaderMegaMenu({userInfo,onSearchTodo}:UserProps) {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
   const [searchQuery,setSearchQuery]=useState<string>('')
   const history = useNavigate()
 
 
 const handleSearch = ()=>{
+  if(searchQuery){
 
+    onSearchTodo(searchQuery)
+  }
 }
 
 const onLogout = ()=>{
   localStorage.clear()
   history('/login')
 }
+
 
   return (
     <Box pb={60}>

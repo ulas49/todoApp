@@ -40,6 +40,7 @@ const Todos: React.FC = () => {
   const [editingTodo, setEditingTodo] = useState<Todo | null>(null);
   const [image, setImage] = useState<File | null>(null);
   const [file, setFile] = useState<File | null>(null);
+  const [isSearch, setIsSearch] = useState(false);
 
 
   const form = useForm({
@@ -205,6 +206,26 @@ const Todos: React.FC = () => {
     }
   };
 
+
+  const onSearchTodo = async (query:string)=>{
+    
+    try {
+      const response = await axiosInstance.get('/api/todo/search-todos/',{
+        params:{query}
+      })
+      if(response.data && response.data.todos){
+        setIsSearch(true)
+        setAllTodos(response.data.todos)
+      }
+
+    
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+
   const closeModal = () => {
     form.reset();
     setEditingTodo(null);
@@ -237,7 +258,7 @@ const Todos: React.FC = () => {
     <div>
       <ToastContainer  autoClose={2000}/>
 
-      <HeaderMegaMenu userInfo={userInfo} />
+      <HeaderMegaMenu userInfo={userInfo}  onSearchTodo={onSearchTodo}/>
       <div className='  w-full flex flex-col items-center p-4 '>
         <Button onClick={open} color="blue" size="md" mb="lg">
           + Yeni Todo Ekle
